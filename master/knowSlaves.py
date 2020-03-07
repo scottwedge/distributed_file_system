@@ -52,10 +52,14 @@ init N processes + undertaker *who's first?
 #     os.system("python masterProcess.py ",i)
     
 undertaker_process = multiprocessing.Process(target=undertaker,args=(undertaker_table,file_names_tables))
-undertaker_process.start()
-undertaker_process.join()
+# undertaker_process.start()
+# undertaker_process.join()
 m_processes = []
 for i in range(0,data_keepers_num):
     m_processes.append(multiprocessing.Process(target=masterProcess,args=(i,undertaker_table,file_names_tables,avaiability_table)))
-    m_processes[i].start()
-    m_processes[i].join()
+    # m_processes[i].start()
+m_processes.append(undertaker_process)
+for Process in m_processes:
+    Process.start()
+for Process in m_processes:
+    Process.join()
