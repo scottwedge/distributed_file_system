@@ -1,7 +1,7 @@
 # import sys
 import zmq
 import time
-def undertaker(undertaker_table,file_names_tables):
+def undertaker_func(undertaker_table,file_names_tables):
     # data_keepers_num = int(sys.argv[1])
     # alive = {}
     # IP_table = shared_memory.SharedMemory(name="IP_table") #connect to shared memory

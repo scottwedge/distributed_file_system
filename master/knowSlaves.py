@@ -12,8 +12,8 @@ import zmq
 # import numpy as np
 # from multiprocessing import shared_memory
 import multiprocessing
-import undertaker
-import masterProcess
+from undertaker import *
+from masterProcess import *
 
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -51,12 +51,12 @@ init N processes + undertaker *who's first?
 # for i in range(0,data_keepers_num):
 #     os.system("python masterProcess.py ",i)
     
-undertaker_process = multiprocessing.Process(target=undertaker,args=(undertaker_table,file_names_tables))
+undertaker_process = multiprocessing.Process(target=undertaker_func,args=(undertaker_table,file_names_tables))
 # undertaker_process.start()
 # undertaker_process.join()
 m_processes = []
 for i in range(0,data_keepers_num):
-    m_processes.append(multiprocessing.Process(target=masterProcess,args=(i,undertaker_table,file_names_tables,avaiability_table)))
+    m_processes.append(multiprocessing.Process(target=masterProcess_func,args=(i,undertaker_table,file_names_tables,avaiability_table)))
     # m_processes[i].start()
 m_processes.append(undertaker_process)
 for Process in m_processes:
