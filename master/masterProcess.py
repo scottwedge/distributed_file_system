@@ -28,7 +28,7 @@ def download_handler(availability_table,IP_return_list):
     
     return retArr
     
-def MasterProcess(process_ID,undertaker_table,file_names_tables,availability_table):    
+def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availability_table):    
     # process_ID = int(sys.argv[1])
     # IP_table = shared_memory.SharedMemory(name="IP_table") #connect to shared memory
     # shared_mem = sys,argv[2]
