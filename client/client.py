@@ -9,13 +9,13 @@ import os
 
 # determine the port number 
 port = 4000
-N =sys.argv[1]
+N = int(sys.argv[1])
 masterIp =sys.argv[2]
 context = zmq.Context()
 print ("Connecting to MasterTracker...")
 socket = context.socket(zmq.REQ)
-for i in range (N):
-    socket.connect ("tcp://"+str(masterIp)+":" % port+i)
+for i in range (port, port + N):
+    socket.connect ("tcp://"+str(masterIp)+":%d" %i)
 
 
 def upload(message,filename):
