@@ -22,13 +22,14 @@ def get_ip_address():
 
 data_keepers_num = -1
 port_num = "5000"
-# port_num_DataKeepers = 10000
+port_num_DataKeepers = 10000
 if (len(sys.argv) > 1):
     data_keepers_num = int(sys.argv[1])
 
 manager = multiprocessing.Manager()
 undertaker_table = manager.dict()
 file_names_tables = manager.dict()
+avaiability_table = manager.dict()
 context = zmq.Context()
 reciever = context.socket(zmq.PULL)
 reciever.connect("tcp://%s:%s"  %( get_ip_address(), port_num))
@@ -39,6 +40,9 @@ for i in range(0,data_keepers_num):
     ip,Num_of_ports = reciever.recv_pyobj()
     undertaker_table[ip]=[False,Num_of_ports]  
     file_names_tables[ip] = []
+    for j in range(0,Num_of_ports):
+        temp_key = ip + ":" + str(port_num_DataKeepers+j)
+        avaiability_table[temp_key] = True
 '''
 init N processes + undertaker *who's first?
 '''
@@ -52,6 +56,6 @@ undertaker_process.start()
 undertaker_process.join()
 m_processes = []
 for i in range(0,data_keepers_num):
-    m_processes.append(multiprocessing.Process(target=masterProcess,args=(i,undertaker_table,file_names_tables)))
+    m_processes.append(multiprocessing.Process(target=masterProcess,args=(i,undertaker_table,file_names_tables,avaiability_table)))
     m_processes[i].start()
     m_processes[i].join()
