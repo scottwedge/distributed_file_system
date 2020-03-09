@@ -1,10 +1,6 @@
+# TODO : complete file to send periodic replication signal
 import time
 import zmq
-import random
-import numpy as np
-import cv2 as cv
-import sys
-import os
 
 port =7000
 context = zmq.Context()
