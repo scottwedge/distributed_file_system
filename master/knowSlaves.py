@@ -32,12 +32,16 @@ file_names_tables = manager.dict()
 avaiability_table = manager.dict()
 context = zmq.Context()
 reciever = context.socket(zmq.PULL)
-reciever.connect("tcp://%s:%s"  %( get_ip_address(), port_num))
+reciever.connect("tcp://192.168.1.14:%s"  %(port_num))
 '''
 write ips in shared memory
 '''
 for i in range(0,data_keepers_num):
-    ip,Num_of_ports = reciever.recv_pyobj()
+    All = reciever.recv_pyobj()
+    print(All['IP'])
+    print(All['N'])
+    ip = All['IP']
+    Num_of_ports = All['N']
     undertaker_table[ip]=[False,Num_of_ports]  
     file_names_tables[ip] = []
     for j in range(0,Num_of_ports):
@@ -56,7 +60,7 @@ undertaker_process = multiprocessing.Process(target=undertaker_func,args=(undert
 # undertaker_process.join()
 m_processes = []
 for i in range(0,data_keepers_num):
-    m_processes.append(multiprocessing.Process(target=masterProcess_func,args=(i,undertaker_table,file_names_tables,avaiability_table)))
+    m_processes.append(multiprocessing.Process(target=MasterProcess_func,args=(i,undertaker_table,file_names_tables,avaiability_table)))
     # m_processes[i].start()
 m_processes.append(undertaker_process)
 for Process in m_processes:

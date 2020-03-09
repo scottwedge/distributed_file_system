@@ -6,9 +6,9 @@ import os
 import socket as sok
 
 #READIGN ARGUMENTS
-port = (sys.argv[1])
-MasterIP = sys.argv[2]
-N = int(sys.argv[3])
+port = 10000
+MasterIP = sys.argv[1]
+N = int(sys.argv[2])
 MasterPort = 4000
 
 def done(request, filename, socket):
@@ -67,7 +67,6 @@ masterSocket = masterContext.socket(zmq.REQ)
 for i in range(MasterPort, MasterPort + N):
     print("tcp://" + MasterIP + ":" + str(i), " THIS IP FOR SUCCESS")
     socket.connect("tcp://" + MasterIP + ":" + str(i))
-
 
 while True:
     message = socket.recv_pyobj()
