@@ -34,7 +34,7 @@ avaiability_table = manager.dict()
 context = zmq.Context()
 reciever = context.socket(zmq.PULL)
 #reciever.connect("tcp://192.168.1.14:%s"  %(port_num))
-reciever.connect("tcp://%s:%s"  %( get_ip_address(), port_num))
+reciever.bind("tcp://%s:%s"  %( get_ip_address(), port_num))
 
 '''
 write ips in shared memory after recieving them from devices in the system

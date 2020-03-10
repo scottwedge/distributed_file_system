@@ -59,11 +59,12 @@ def get_ip_address():
 ################        MAIN        ##################
 context = zmq.Context()
 socket = context.socket(zmq.REP)
-print("tcp://" + str(get_ip_address()) + ":" + str(port))
+print("binding to my ip tcp://" + str(get_ip_address()) + ":" + str(port))
 socket.bind("tcp://" + str(get_ip_address()) + ":" + str(port))
 
 masterContext = zmq.Context()
 masterSocket = masterContext.socket(zmq.REQ)
+print("connecting to all master processes")
 for i in range(MasterPort, MasterPort + N):
     print("tcp://" + MasterIP + ":" + str(i), " THIS IP FOR SUCCESS")
     socket.connect("tcp://" + MasterIP + ":" + str(i))

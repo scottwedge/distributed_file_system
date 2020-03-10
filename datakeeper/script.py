@@ -11,23 +11,26 @@ def get_ip_address():
     return s.getsockname()[0]
 
 #reading arguments
+print("reading arguments")
 port = 5000
 N = int(sys.argv[1])
 MasterIP = str(sys.argv[2])
 MasterN = sys.argv[3]
 
 #sending the initializing data to the master
+print("sending my ip to master:" + str(get_ip_address()))
 context = zmq.Context()
 socket = context.socket(zmq.PUSH)
-socket.bind("tcp://" + str(get_ip_address()) + ":" + str(port))
+socket.connect("tcp://" + str(MasterIP) + ":" + str(port))
 socket.send_pyobj({'IP' : str(get_ip_address()), 'N' : str(N)})
 
 #running the alarm process
-os.system("python3 alarm.py &")
+#os.system("python3 alarm.py &")
 
 #running the replica process
-os.system("python3 replica.py &")
+#os.system("python3 replica.py &")
 
 #running the N datakeeper for this machine
+print("running the keeper "+ str(N))
 for i in range(N):
     os.system("python3 keeper.py " + str(MasterIP) + " " + str(MasterN) + " &")
