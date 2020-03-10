@@ -1,8 +1,6 @@
 import time
 import zmq
-import random
-import numpy as np
-import cv2 as cv
+#import cv2 as cv
 import sys
 import os
 
