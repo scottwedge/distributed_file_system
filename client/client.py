@@ -1,8 +1,6 @@
 import time
 import zmq
-import random
-import numpy as np
-import cv2 as cv
+#import cv2 as cv
 import sys
 import os
 
@@ -75,7 +73,7 @@ while (True):
     request = input()
     print ("Enter the File Name With .mp4")
     filename= input()
-    print ("Sending request upload to MasterTracker...")
+    print ("Sending request to MasterTracker...")
     socket.send_pyobj ([str(request),filename])
     message = socket.recv_pyobj()
     if (message[0] == "e" and request == "upload"):

@@ -19,21 +19,13 @@ def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availabilit
     print(len(availability_table),availability_table)
     while True:
         #wait for new request
+        print("waiting for new request")
         request_type,file_name = socket.recv_pyobj()
         print(str(process_ID)+" process recieved a request of type :"+request_type)
         print(file_name)
 
         print(file_names_tables,file_name)
-        return_array = []
-        for item in file_names_tables.items():
-            IP,files = item
-            for file in files:
-                if(file_name == file):
-                    return_array.append(IP)
-        
-        IP_return_list = return_array
-
-        #IP_return_list = find_file(file_names_tables,file_name) #search file name in all data keepers
+        IP_return_list = find_file(file_names_tables,file_name) #search file name in all data keepers
         if request_type == "upload":
             if(len(IP_return_list) != 0):
                 socket.send_pyobj("error : no free devices to upload to")
@@ -64,10 +56,11 @@ def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availabilit
 
         elif request_type == "replydownload":
             availability_table[file_name] = False
-            print(file_name + "is free now..")
+            print(file_name + "is taken now..")
             socket.send_pyobj("Fol 3alik ya client")
         elif request_type == "dataKeeperSuccess":
             IPport,oldrequest,filedownloaded=file_name
+            print(file_name)
             availability_table[IPport] = True
             if (oldrequest == "upload"):
                 IP,port=IPport.split(":")
@@ -82,7 +75,7 @@ def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availabilit
 def find_file(file_names_tables,file_name):
     print(file_names_tables,file_name)
     return_array = []
-    for item in file_names_tables:
+    for item in file_names_tables.items():
         IP,files = item
         for file in files:
             if(file_name == file):
