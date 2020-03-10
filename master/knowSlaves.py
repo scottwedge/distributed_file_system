@@ -34,7 +34,7 @@ avaiability_table = manager.dict()
 context = zmq.Context()
 reciever = context.socket(zmq.PULL)
 #reciever.connect("tcp://192.168.1.14:%s"  %(port_num))
-reciever.connect("tcp://%s:%s"  %( get_ip_address(), port_num))
+reciever.bind("tcp://%s:%s"  %( get_ip_address(), port_num))
 
 '''
 write ips in shared memory after recieving them from devices in the system
@@ -42,14 +42,15 @@ write ips in shared memory after recieving them from devices in the system
 print("recieving data keepers IPs ..")
 for i in range(0,data_keepers_num):
     All = reciever.recv_pyobj()
-    print("device "+str(i)+" recieved :")
-    print(All['IP'])
+    print("device "+str(i+1)+" recieved :"+All['IP'])
+    #print(All['IP'])
     #print(All['N'])
     ip = All['IP']
-    Num_of_ports = All['N']
+    Num_of_ports = int(All['N'])
     undertaker_table[ip]=[False,Num_of_ports]  #initialize all devices not alive 
                                                #until they send their first heart beat
-    file_names_tables[ip] = []
+    file_names_tables[ip] = [""]
+    print(file_names_tables[ip],len(file_names_tables))
     for j in range(0,Num_of_ports):
         temp_key = ip + ":" + str(port_num_DataKeepers+j)
         avaiability_table[temp_key] = True
@@ -61,19 +62,20 @@ start N processes +undertaker
 # for i in range(0,data_keepers_num):
 #     os.system("python masterProcess.py ",i)
     
-undertaker_process = multiprocessing.Process(target=undertaker_func,args=(undertaker_table,file_names_tables))
-print("starting undertaker process..")
-undertaker_process.start()
+#undertaker_process = multiprocessing.Process(target=undertaker_func,args=(undertaker_table,file_names_tables))
+#print("starting undertaker process..")
+#undertaker_process.start()
 m_processes = []
 for i in range(0,master_processes_num):
     m_processes.append(multiprocessing.Process(target=MasterProcess_func,args=(i,undertaker_table,file_names_tables,avaiability_table)))
 
-m_processes.append(undertaker_process)
+#m_processes.append(undertaker_process)
+#print("initializing "+str(len(m_processes))+" processes")
+for Process in range(0,len(m_processes)):
+    print("starting master process no."+str(Process)   +"..")
+    m_processes[int(Process)].start()
 for Process in m_processes:
-    print("starting master process no."+str(process)+"..")
-    Process.start()
-#for Process in m_processes:
-#    Process.join()
-undertaker_process.join() #wait for infinite processes to end ..
+    Process.join()
+#undertaker_process.join() #wait for infinite processes to end ..
 print("this line cannot be reached ever")
 
