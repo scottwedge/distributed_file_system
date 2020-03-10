@@ -78,9 +78,9 @@ while (True):
     print ("Sending request to MasterTracker...")
     socket.send_pyobj ([str(request),filename])
     message = socket.recv_pyobj()
-    if (message == "Error" and request == "upload"):
+    if (message[0] == "e" and request == "upload"):
         print("this file is currently on the server please choose a file with an other name")
-    if (message == "Error" and request == "download"):
+    if (message[0] == "e" and request == "download"):
         print("there is no empty port for now")
     if (request == "upload"):
         upload(message,str(filename))
