@@ -15,12 +15,25 @@ def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availabilit
     socket.bind("tcp://%s:%s"  %( get_ip_address(), port)) #bind server
     # socket_datakeeper = context.socket(zmq.PULL)
     # socket.bind("tcp://%s:%s"  %( get_ip_address(), port))
-    
+    print(len(file_names_tables),file_names_tables)
+    print(len(availability_table),availability_table)
     while True:
         #wait for new request
         request_type,file_name = socket.recv_pyobj()
         print(str(process_ID)+" process recieved a request of type :"+request_type)
-        IP_return_list = find_file(file_names_tables,file_name) #search file name in all data keepers
+        print(file_name)
+
+        print(file_names_tables,file_name)
+        return_array = []
+        for item in file_names_tables.items():
+            IP,files = item
+            for file in files:
+                if(file_name == file):
+                    return_array.append(IP)
+        
+        IP_return_list = return_array
+
+        #IP_return_list = find_file(file_names_tables,file_name) #search file name in all data keepers
         if request_type == "upload":
             if(len(IP_return_list) != 0):
                 socket.send_pyobj("error : no free devices to upload to")
@@ -67,6 +80,7 @@ def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availabilit
             print("master response : error // request type not known")
 
 def find_file(file_names_tables,file_name):
+    print(file_names_tables,file_name)
     return_array = []
     for item in file_names_tables:
         IP,files = item
@@ -82,11 +96,15 @@ def get_ip_address():
 
 
 def upload_handler(availability_table):
+    #print("availability table in upload"+availability_table)
     # send first avaialble data keeper and wait for success msg from data keeper 
     #then send success to client and add filename to data keeper
     for item in availability_table.items():
+        #print("for item"+item+ "in availability_table.items()")
         IPport,status = item
+        #print(IPport,status)
         if(status):
+            #print(availability_table[IPport])
             availability_table[IPport] = False
             return IPport
     return "-1"
