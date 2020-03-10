@@ -9,13 +9,13 @@ import os
 
 # determine the port number 
 port = 4000
-N =sys.argv[1]
+N = int(sys.argv[1])
 masterIp =sys.argv[2]
 context = zmq.Context()
 print ("Connecting to MasterTracker...")
 socket = context.socket(zmq.REQ)
 for i in range (N):
-    socket.connect ("tcp://"+str(masterIp)+":" % port+i)
+    socket.connect ("tcp://"+str(masterIp)+":%d" %(port+i))
 
 
 def upload(message,filename):
@@ -78,13 +78,15 @@ while (True):
     print ("Sending request upload to MasterTracker...")
     socket.send_pyobj ([str(request),filename])
     message = socket.recv_pyobj()
-    if (message == "Error" and request == "upload"):
+    if (message[0] == "e" and request == "upload"):
         print("this file is currently on the server please choose a file with an other name")
-    if (message == "Error" and request == "download"):
+    if (message[0] == "e" and request == "download"):
         print("there is no empty port for now")
     if (request == "upload"):
+        print(message)
         upload(message,str(filename))
     if (request == "download"):
+        print(message)
         download(message,str(filename))
     if (request == "exit"):
         break
