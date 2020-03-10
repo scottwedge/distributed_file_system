@@ -78,14 +78,15 @@ while (True):
     message = socket.recv_pyobj()
     if (message[0] == "e" and request == "upload"):
         print("this file is currently on the server please choose a file with an other name")
-    if (message[0] == "e" and request == "download"):
+    else if (message[0] == "e" and request == "download"):
         print("there is no empty port for now")
-    if (request == "upload"):
+    else if (request == "upload"):
         print(message)
         upload(message,str(filename))
-    if (request == "download"):
+    else if (request == "download"):
         print(message)
         download(message,str(filename))
-    if (request == "exit"):
+    else if (request == "exit"):
+        print ("you enters "+request)
         break
 
