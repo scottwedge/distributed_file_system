@@ -41,7 +41,9 @@ write ips in shared memory after recieving them from devices in the system
 '''
 print("recieving data keepers IPs ..")
 for i in range(0,data_keepers_num):
+    print ("Entering The fucken For Loop")
     All = reciever.recv_pyobj()
+    print ("after All Line ")
     print("device "+str(i+1)+" recieved :"+All['IP'])
     #print(All['IP'])
     #print(All['N'])
