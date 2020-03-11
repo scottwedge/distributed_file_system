@@ -24,7 +24,7 @@ socket.connect("tcp://" + str(MasterIP) + ":" + str(port))
 socket.send_pyobj({'IP' : str(get_ip_address()), 'N' : str(N)})
 
 #running the alarm process
-#os.system("python3 alarm.py &")
+os.system("python3.8 alarm.py &")
 
 #running the replica process
 #os.system("python3 replica.py &")

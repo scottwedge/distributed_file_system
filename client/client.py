@@ -42,21 +42,22 @@ def upload(message,filename):
 
 def download(message,filename):
     print ("download")
-    socket.send_pyobj (["replyDownload,",message[0]])
-    message = socket.recv_pyobj()
-    print ("Received reply from MasterTracker ", message, "....")
+    socket.send_pyobj (["replyDownload",message[0]])
+    message1 = socket.recv_pyobj()
+    print ("Received reply from MasterTracker ", message1, "....")
     context2 = zmq.Context()
     print ("Connecting to DataKeeper to Download...")
-    socket2 = context2.socket(zmq.REP)
-    socket2.connect ("tcp://"+message[0])
+    socket2 = context2.socket(zmq.REQ)
+    print ("************************************ message => ",message[0])
+    socket2.connect ("tcp://"+str(message[0]))
     socket2.send_pyobj ("download")
     #  Get the reply.
-    message = socket2.recv_pyobj()
-    print ("Received reply ", message, "....")
+    message2 = socket2.recv_pyobj()
+    print ("Received reply ", message2, "....")
 
     socket2.send_pyobj (filename)
 
-    msg = socket.recv_pyobj()
+    msg = socket2.recv_pyobj()
     print (msg)
     file_output = filename+".mp4"
 
@@ -73,6 +74,7 @@ while (True):
     request = input()
     print ("Enter the File Name With .mp4")
     filename= input()
+    # check on the file the file that is on the desk already 
     print ("Sending request to MasterTracker...")
     socket.send_pyobj ([str(request),filename])
     message = socket.recv_pyobj()
