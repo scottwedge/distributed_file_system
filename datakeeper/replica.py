@@ -1,6 +1,5 @@
 import time
 import zmq
-import cv2
 import sys
 import os
 import signal

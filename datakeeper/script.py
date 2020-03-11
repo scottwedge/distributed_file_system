@@ -1,6 +1,5 @@
 import time
 import zmq
-import cv2
 import sys
 import os
 import socket as sok
@@ -33,4 +32,4 @@ socket.send_pyobj({'IP' : str(get_ip_address()), 'N' : str(N)})
 #running the N datakeeper for this machine
 print("running the keeper "+ str(N))
 for i in range(N):
-    os.system("python3 keeper.py " + str(MasterIP) + " " + str(MasterN) + " &")
+    os.system("python3.8 keeper.py " + str(MasterIP) + " " + str(MasterN) + " &")

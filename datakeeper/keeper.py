@@ -1,6 +1,5 @@
 import time
 import zmq
-import cv2
 import sys
 import os
 import socket as sok
@@ -12,10 +11,11 @@ N = int(sys.argv[2])
 MasterPort = 4000
 
 
-def done(request, filename, socket):
+def endRequest(request, filename, socket):
     #list order ["dataKeeperSuccess" ,[ip, request(upload, download), filename]]
     print(["dataKeeperSuccess" ,[str(get_ip_address()) + ":" + str(port), request, filename]])
-    socket.send_pyobj(["dataKeeperSuccess" ,[str(get_ip_address()) + ":" + str(port), request, filename]])
+    socket.send_pyobj(["dataKeeperSuccess" ,[str(get_ip_address()) + ":" + str(port), str(request), str(filename)]])
+    print ("Ahmed Here")
     msg = socket.recv_pyobj()
     print(msg)
 
@@ -39,7 +39,7 @@ def download(socket, Msocket):
         out_file.write(msg)
     print("the video was saved")
     socket.send_pyobj("the file is saved successfully") 
-    done("upload", FILE_OUTPUT, Msocket)
+    endRequest("upload", FILE_OUTPUT, Msocket)
 ###################################################################################
 
 ############################################
@@ -51,7 +51,7 @@ def Upload(socket, Msocket):
     file = open(msg, 'rb').read()
     socket.send_pyobj(file)
     print("sent the file to client")
-    done("download", msg, Msocket)
+    endRequest("download", msg, Msocket)
 ############################################
 
 ##################################################
@@ -72,7 +72,7 @@ masterSocket = masterContext.socket(zmq.REQ)
 print("connecting to all master processes")
 for i in range(MasterPort, MasterPort + N):
     print("tcp://" + MasterIP + ":" + str(i), " THIS IP FOR SUCCESS")
-    socket.connect("tcp://" + MasterIP + ":" + str(i))
+    masterSocket.connect("tcp://" + MasterIP + ":" + str(i))
 
 while True:
     message = socket.recv_pyobj()
