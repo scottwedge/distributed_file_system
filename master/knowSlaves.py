@@ -47,9 +47,9 @@ for i in range(0,data_keepers_num):
     #print(All['N'])
     ip = All['IP']
     Num_of_ports = int(All['N'])
-    undertaker_table[ip]=[False,Num_of_ports]  #initialize all devices not alive 
+    undertaker_table[ip]=[False,Num_of_ports]  #initialize all devices not alive
                                                #until they send their first heart beat
-    file_names_tables[ip] = [""]
+    file_names_tables[ip] = []
     print(file_names_tables[ip],len(file_names_tables))
     for j in range(0,Num_of_ports):
         temp_key = ip + ":" + str(port_num_DataKeepers+j)
@@ -61,10 +61,10 @@ start N processes +undertaker
 # os.system("python undertaker.py "+data_keepers_num)
 # for i in range(0,data_keepers_num):
 #     os.system("python masterProcess.py ",i)
-    
-#undertaker_process = multiprocessing.Process(target=undertaker_func,args=(undertaker_table,file_names_tables))
-#print("starting undertaker process..")
-#undertaker_process.start()
+
+undertaker_process = multiprocessing.Process(target=undertaker_func,args=(undertaker_table,file_names_tables))
+print("starting undertaker process..")
+undertaker_process.start()
 m_processes = []
 for i in range(0,master_processes_num):
     m_processes.append(multiprocessing.Process(target=MasterProcess_func,args=(i,undertaker_table,file_names_tables,avaiability_table)))
@@ -76,6 +76,5 @@ for Process in range(0,len(m_processes)):
     m_processes[int(Process)].start()
 for Process in m_processes:
     Process.join()
-#undertaker_process.join() #wait for infinite processes to end ..
+undertaker_process.join() #wait for infinite processes to end ..
 print("this line cannot be reached ever")
-

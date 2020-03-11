@@ -56,7 +56,7 @@ def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availabilit
             else:
                 socket.send_pyobj("error : file not found in any data keeper")
                 print("master response : error // file not found in any data keeper")
-        elif request_type == "replydownload":
+        elif request_type == "replyDownload":
             availability_table[file_name] = False
             print(file_name + "is taken now..")
             socket.send_pyobj("Fol 3alik ya client")
@@ -66,7 +66,10 @@ def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availabilit
             availability_table[IPport] = True
             if (oldrequest == "upload"):
                 IP,port=IPport.split(":")
-                file_names_tables[IP].append(filedownloaded)
+                templist = file_names_tables[IP]
+                templist.append(filedownloaded)
+                file_names_tables[IP] = templist
+                #file_names_tables[IP].append(filedownloaded)
                 print("file_names_tables[IP] = ",file_names_tables[IP])
             #TODO : send success sig to client
             socket.send_pyobj("Fol 3alik ya data keeper")
@@ -103,7 +106,7 @@ def upload_handler(availability_table):
             #print(availability_table[IPport])
             availability_table[IPport] = False
             return IPport
-    return "-1"
+    return "error : no devices available to upload to"
 
 def download_handler(availability_table,IP_return_list):
     #recieved download request from client
