@@ -9,6 +9,7 @@ import zmq
 import multiprocessing
 from undertaker import *
 from masterProcess import *
+from replication import *
 
 def get_ip_address():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -65,6 +66,11 @@ start N processes +undertaker
 undertaker_process = multiprocessing.Process(target=undertaker_func,args=(undertaker_table,file_names_tables))
 print("starting undertaker process..")
 undertaker_process.start()
+############################################
+replication_process = multiprocessing.Process(target=replication_func,args=(avaiability_table,file_names_tables))
+print("starting replication process..")
+replication_process.start()
+#############################################
 m_processes = []
 for i in range(0,master_processes_num):
     m_processes.append(multiprocessing.Process(target=MasterProcess_func,args=(i,undertaker_table,file_names_tables,avaiability_table)))

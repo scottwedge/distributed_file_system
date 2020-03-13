@@ -2,44 +2,49 @@
 import time
 import zmq
 
-port =7000
-context = zmq.Context()
-print ("Connecting to server...")
-socket = context.socket(zmq.REQ)
-socket.connect ("tcp://192.168.1.10:%s" % port)
+def replication_func(availability_table,file_names_tables):
+    port_num =7000 #back door for replication
+    data_keepers_num = -1
+    if (len(sys.argv) > 1):
+        data_keepers_num = int(sys.argv[1])
+    print("identifying "+str(data_keepers_num)+" data keepers in the replication system")
+    maxNumOfReplications=min(3,data_keepers_num) #less than 3 if we have less than 3 data keepers
+    context = zmq.Context()
+    ## TODO: fix connection , you can't bind same ip & port multiple times
+    sockets={}
+    for i in range(data_keepers_num):
+        print ("binding replication port of datakeeper no. "+str(i+1))
+        sockets[ip] = context.socket(zmq.Push)
+        sockets[ip].bind ("tcp://%s:%s"  %( get_ip_address(), str(port_num)))
 
-print ("Sending replicate request ...")
-socket.send_pyobj ({"first_ip" : "192.168.1.9"})
-#  Get the reply.
-message = socket.recv_pyobj()
-print ("Received reply [", message, "]")
+    while True:
+        ## DONE: check for file if present in IPs<maxNumOfReplications
+        ## DONE: get ip:port available for the other datakeeper IPs
+        ## DONE: send to data keeper [ip:port , file name]
+        for item in file_names_tables.items():
+            IP,files = item
+            for file in files:
+                if(Need_to_replicate(file)):
+                    #get another IP other than found
+                    nextIP=getNextOtherIP(IP,file_names_tables,file)
+                    #get free port to send to
+                    nextPort=getFirstNextFreePort(nextIP,availability_table)
+                    availability_table[nextPort] = False
+                    print(file_name + "is taken now for replication..")
+                    sockets[IP].send_pyobj([nextPort,file]) #send to the datakeeper having the file to send it to other data keeper given
+                    wait(1)
 
 
-socket.send_pyobj ({"video_name" : "output.mp4", "video_name1" : "output24000.mp4", "video_name2" : "output24001.mp4", "video_name3" : "output24002.mp4"})
+#returns true if file does Need_to_replicate exist in tables<maxNumOfReplications
+def Need_to_replicate(file_name):
+    pass
+    ## TODO: implement
 
-msgAfterSend = socket.recv_pyobj()
-print (msgAfterSend)
+#get ip doesn't have the same file
+def getNextOtherIP(IP,file_names_tables,file):
+    pass
+    ## TODO: implement
 
-
-context1 = zmq.Context()
-print ("Connecting to server...")
-socket1 = context1.socket(zmq.REP)
-socket1.bind("tcp://192.168.1.9:%s" % port)
-i=0
-msg = socket1.recv_pyobj()
-print (msg)
-socket1.send_pyobj ("send videos")
-while (True):
-
-    msg = socket1.recv_pyobj()
-    print (msg)
-    file_output = "download"+str(i)+".mp4"
-
-    if os.path.isfile(file_output):
-        os.remove(file_output)
-
-    with open(file_output, "wb") as out_file:
-        out_file.write(msg)
-
-    i+=1
-    socket1.send_pyobj ("download"+str(i)+".mp4 is done")
+def getFirstNextFreePort(nextIP,availability_table):
+    pass
+    ## TODO: implement
