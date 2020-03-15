@@ -28,14 +28,15 @@ def replicate(IP, video):
     keeperSocket.disconnet()
 
 masterContext = zmq.Context()
-masterSocket = masterContext.socket(zmq.REP)
+masterSocket = masterContext.socket(zmq.PAIR)
 print("tcp://" + str(masterIP) + ":" + str(port))
-masterSocket.connect("tcp://" + str(masterIP) + ":" + str(port))
+masterSocket.bind("tcp://" + get_ip_address() + ":" + str(port))
 
 while True:
-    IP = masterSocket.recv_pyobj()
-    masterSocket.send_pyobj("the ips was recieved")
-    video = masterSocket.recv_pyobj()
-    masterSocket.send_pyobj("the videos was recieved")
-
+    # IP = masterSocket.recv_pyobj()
+    # masterSocket.send_pyobj("the ips was recieved")
+    # video = masterSocket.recv_pyobj()
+    # masterSocket.send_pyobj("the videos was recieved")
+    
+    IP,video = masterSocket.recv_pyobj()
     replicate(IP, video)

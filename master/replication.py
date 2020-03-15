@@ -11,12 +11,12 @@ def replication_func(availability_table,file_names_tables):
     print("identifying "+str(data_keepers_num)+" data keepers in the replication system")
     maxNumOfReplications=min(3,data_keepers_num) #less than 3 if we have less than 3 data keepers
     context = zmq.Context()
-    replication_socket = context.socket(zmq.REQ)
+    replication_socket = context.socket(zmq.PAIR)
     #sockets={}
-    for i in range(data_keepers_num):
-        print ("binding replication port of datakeeper no. "+str(i+1))
-        sockets[ip] = context.socket(zmq.Push)
-        sockets[ip].bind ("tcp://%s:%s"  %( get_ip_address(), str(port_num)))
+    # for i in range(data_keepers_num):
+    #     print ("binding replication port of datakeeper no. "+str(i+1))
+    #     sockets[ip] = context.socket(zmq.Push)
+    #     sockets[ip].bind ("tcp://%s:%s"  %( get_ip_address(), str(port_num)))
 
     while True:
         ## DONE: check for file if present in IPs<maxNumOfReplications
@@ -35,7 +35,6 @@ def replication_func(availability_table,file_names_tables):
                     print(file + "is taken now for replication..")
                     # sockets[IP].send_pyobj([nextPort,file]) #send to the datakeeper having the file to send it to other data keeper given
                     replication_socket.send_pyobj([nextPort,file])
-                    replication_socket.recv_pyobj()
                     replication_socket.close() # socket.disconnect() may work
                     time.sleep(1)
 
@@ -59,13 +58,14 @@ def Need_to_replicate(file_name,file_names_tables,maxNumOfReplications):
 def getNextOtherIP(IP,file_names_tables,file_name):
     for item in file_names_tables.items():
         file_exists_in_current_data_keeper = False
-        IP,files = item
-        for file in files:
-            if(file_name == file):
-                file_exists_in_current_data_keeper = True
-        if (file_exists_in_current_data_keeper == False):
-            return IP
-    return "-1" # all IPs have this file
+        IPfromlist,files = item
+        if (IP != IPfromlist):
+            for file in files:
+                if(file_name == file):
+                    file_exists_in_current_data_keeper = True
+            if (file_exists_in_current_data_keeper == False):
+                return IPfromlist
+    return "error : (getNextOtherIP)this line can't be reached" # all IPs have this file
     
     ## Done: implement
     ## TODO: test
@@ -76,6 +76,6 @@ def getFirstNextFreePort(nextIP,availability_table):
         IP,port=IPport.split(":")
         if (IP == nextIP and status == True):
             return IPport
-    return "-1"
+    return "error : no free port available"
     ## Done: implement
     ## TODO: test
