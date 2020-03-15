@@ -25,7 +25,7 @@ def replicate(IP, video):
     keeperSocket.send_pyobj(file)
     msg = keeperSocket.recv_pyobj()
     print(msg)
-    keeperSocket.disconnect()
+    #keeperContext.term()
 
 masterContext = zmq.Context()
 masterSocket = masterContext.socket(zmq.PAIR)

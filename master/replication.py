@@ -26,7 +26,8 @@ def replication_func(availability_table,file_names_tables):
             IP,files = item
             for file in files:
                 if(Need_to_replicate(file,file_names_tables,maxNumOfReplications)):
-                    replication_socket.connect("tcp://%s:%s"  %( str(IP), str(replication_port)))
+                    #replication_socket.connect("tcp://%s:%s"  %( str(IP), str(replication_port)))
+                    replication_socket.connect("tcp://" + str(IP) + ":" + str(replication_port))
                     #get another IP other than found
                     nextIP=getNextOtherIP(IP,file_names_tables,file)
                     #get free port to send to
@@ -35,7 +36,8 @@ def replication_func(availability_table,file_names_tables):
                     print(file + "is taken now for replication..")
                     # sockets[IP].send_pyobj([nextPort,file]) #send to the datakeeper having the file to send it to other data keeper given
                     replication_socket.send_pyobj([nextPort,file])
-                    replication_socket.close() # socket.disconnect() may work
+                    #replication_socket.close()
+                    replication_socket.disconnect("tcp://" + str(IP) + ":" + str(replication_port))
                     time.sleep(1)
 
 
