@@ -26,7 +26,7 @@ def replication_func(availability_table,file_names_tables):
             IP,files = item
             for file in files:
                 if(Need_to_replicate(file,file_names_tables,maxNumOfReplications)):
-                    replication_socket.connect("tcp://%s:%s"  %( IP, replication_port))
+                    replication_socket.connect("tcp://%s:%s"  %( str(IP), str(replication_port)))
                     #get another IP other than found
                     nextIP=getNextOtherIP(IP,file_names_tables,file)
                     #get free port to send to

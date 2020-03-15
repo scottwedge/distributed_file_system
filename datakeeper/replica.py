@@ -25,12 +25,12 @@ def replicate(IP, video):
     keeperSocket.send_pyobj(file)
     msg = keeperSocket.recv_pyobj()
     print(msg)
-    keeperSocket.disconnet()
+    keeperSocket.disconnect()
 
 masterContext = zmq.Context()
 masterSocket = masterContext.socket(zmq.PAIR)
-print("tcp://" + str(masterIP) + ":" + str(port))
-masterSocket.bind("tcp://" + get_ip_address() + ":" + str(port))
+print("tcp://" + str(get_ip_address()) + ":" + str(port))
+masterSocket.bind("tcp://" + str(get_ip_address()) + ":" + str(port))
 
 while True:
     # IP = masterSocket.recv_pyobj()
