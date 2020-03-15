@@ -18,7 +18,7 @@ def replicate(IPs, videos):
     for key in IPs:
         print("tcp://" + str(IPs[key]) + ":" + str(port))
         keeperSocket.connect("tcp://" + str(IPs[key]) + ":" + str(port))
-        keeperSocket.send_pyobj("Upload")
+        keeperSocket.send_pyobj("upload")
         msg = keeperSocket.recv_pyobj()
         print(msg)
         for V in videos:
