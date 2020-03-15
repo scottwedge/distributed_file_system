@@ -27,7 +27,7 @@ socket.send_pyobj({'IP' : str(get_ip_address()), 'N' : str(N)})
 os.system("python3.8 alarm.py &")
 
 #running the replica process
-#os.system("python3 replica.py &")
+os.system("python3 replica.py " + str(MasterIP) + " &")
 
 #running the N datakeeper for this machine
 print("running the keeper "+ str(N))
