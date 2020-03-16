@@ -1,13 +1,9 @@
-# TODO : complete file to send periodic replication signal
 import time
 import zmq
 import sys
 
-def replication_func(availability_table,file_names_tables):
+def replication_func(data_keepers_num,availability_table,file_names_tables):
     replication_port =7000 #back door for replication
-    data_keepers_num = -1
-    if (len(sys.argv) > 1):
-        data_keepers_num = int(sys.argv[1])
     print("identifying "+str(data_keepers_num)+" data keepers in the replication system")
     maxNumOfReplications=min(3,data_keepers_num) #less than 3 if we have less than 3 data keepers
     context = zmq.Context()
@@ -30,8 +26,16 @@ def replication_func(availability_table,file_names_tables):
                     replication_socket.connect("tcp://" + str(IP) + ":" + str(replication_port))
                     #get another IP other than found
                     nextIP=getNextOtherIP(IP,file_names_tables,file)
+                    if nextIP[0] == 'e':
+                        print(nextIP)
+                        replication_socket.disconnect("tcp://" + str(IP) + ":" + str(replication_port))
+                        continue
                     #get free port to send to
                     nextPort=getFirstNextFreePort(nextIP,availability_table)
+                    if nextPort[0] == 'e':
+                        print(nextPort)
+                        replication_socket.disconnect("tcp://" + str(IP) + ":" + str(replication_port))
+                        continue
                     availability_table[nextPort] = False
                     print(file + "is taken now for replication..")
                     # sockets[IP].send_pyobj([nextPort,file]) #send to the datakeeper having the file to send it to other data keeper given
@@ -53,8 +57,6 @@ def Need_to_replicate(file_name,file_names_tables,maxNumOfReplications):
         return False
     else:
         return True
-    ## Done: implement
-    ## TODO: test
 
 #get ip doesn't have the same file
 def getNextOtherIP(IP,file_names_tables,file_name):
@@ -68,9 +70,6 @@ def getNextOtherIP(IP,file_names_tables,file_name):
             if (file_exists_in_current_data_keeper == False):
                 return IPfromlist
     return "error : (getNextOtherIP)this line can't be reached" # all IPs have this file
-    
-    ## Done: implement
-    ## TODO: test
 
 def getFirstNextFreePort(nextIP,availability_table):
     for item in availability_table.items():
@@ -79,5 +78,3 @@ def getFirstNextFreePort(nextIP,availability_table):
         if (IP == nextIP and status == True):
             return IPport
     return "error : no free port available"
-    ## Done: implement
-    ## TODO: test

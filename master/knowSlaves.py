@@ -69,7 +69,7 @@ undertaker_process = multiprocessing.Process(target=undertaker_func,args=(undert
 print("starting undertaker process..")
 undertaker_process.start()
 ############################################
-replication_process = multiprocessing.Process(target=replication_func,args=(avaiability_table,file_names_tables))
+replication_process = multiprocessing.Process(target=replication_func,args=(data_keepers_num,avaiability_table,file_names_tables))
 print("starting replication process..")
 replication_process.start()
 #############################################
