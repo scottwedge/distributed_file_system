@@ -72,41 +72,48 @@ def download(message,filename):
 while (True):
     print ("Enter Your Request")
     request = input()
-    print ("Enter the File Name With .mp4")
-    filename= input()
-    # check on the file the file that is on the desk already 
-    print ("Sending request to MasterTracker...")
-    socket.send_pyobj ([str(request),filename])
-    message = socket.recv_pyobj()
-    print ("*****************************************************************************************************************************************")
-    print ("*********************************************** Recieve Response from the master ********************************************************")
-    print ("*****************************************************************************************************************************************")
-    print  ("This is the message from the master "+str(message))
-    if (message[0] == "e" and request == "upload"):
-        print ("*****************************************************************************************************************************************")
-        print ("******************************************* we have upload request and have error message ***********************************************")
-        print("this file is currently on the server please choose a file with an other name or there is no empty servers right now")
-        print (message)
-        print ("*****************************************************************************************************************************************")
-    elif (message[0] == "e" and request == "download"):
-        print ("*****************************************************************************************************************************************")
-        print ("******************************************* we have download request and have error message *********************************************")
-        print("there is no empty port for now")
-        print (message)
-        print ("*****************************************************************************************************************************************")
-    elif (message[0] != "e" and request == "upload"):
-        print ("*****************************************************************************************************************************************")
-        print ("**************************************************** we have upload request *************************************************************")
-        print(message)
-        upload(message,str(filename))
-        print ("*****************************************************************************************************************************************")
-    elif (message[0] != "e" and request == "download"):
-        print ("*****************************************************************************************************************************************")
-        print ("****************************************************** we have download request *********************************************************")
-        print(message)
-        download(message,str(filename))
-        print ("*****************************************************************************************************************************************")
-    elif (request == "exit"):
-        print ("you enters "+request)
-        break
+    if request == "upload" or request == "download" or request == "exit":
+        print ("Enter the File Name With .mp4")
+        filename= input()
+        if os.path.exists(filename):
+
+            # check on the file the file that is on the desk already 
+            print ("Sending request to MasterTracker...")
+            socket.send_pyobj ([str(request),filename])
+            message = socket.recv_pyobj()
+            print ("*****************************************************************************************************************************************")
+            print ("*********************************************** Recieve Response from the master ********************************************************")
+            print ("*****************************************************************************************************************************************")
+            print  ("This is the message from the master "+str(message))
+            if (message[0] == "e" and request == "upload"):
+                print ("*****************************************************************************************************************************************")
+                print ("******************************************* we have upload request and have error message ***********************************************")
+                print("this file is currently on the server please choose a file with an other name or there is no empty servers right now")
+                print (message)
+                print ("*****************************************************************************************************************************************")
+            elif (message[0] == "e" and request == "download"):
+                print ("*****************************************************************************************************************************************")
+                print ("******************************************* we have download request and have error message *********************************************")
+                print("there is no empty port for now")
+                print (message)
+                print ("*****************************************************************************************************************************************")
+            elif (message[0] != "e" and request == "upload"):
+                print ("*****************************************************************************************************************************************")
+                print ("**************************************************** we have upload request *************************************************************")
+                print(message)
+                upload(message,str(filename))
+                print ("*****************************************************************************************************************************************")
+            elif (message[0] != "e" and request == "download"):
+                print ("*****************************************************************************************************************************************")
+                print ("****************************************************** we have download request *********************************************************")
+                print(message)
+                download(message,str(filename))
+                print ("*****************************************************************************************************************************************")
+            elif (request == "exit"):
+                print ("you enters "+request)
+                break
+        else :
+            print ("you entered a wrong file name please enter a right one XD")
+    else:
+        print  ("please enter a valid request between (upload, download, exit) ....")
 
