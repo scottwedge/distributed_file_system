@@ -10,6 +10,7 @@ def undertaker_func(undertaker_table,file_names_tables):
     context = zmq.Context()
     port="6000" #back door for recieving alive messages from data keepers
     socket = context.socket(zmq.SUB)
+    socket.setsockopt(zmq.RCVTIMEO,500) # failsafe for undertaker socket
     socket.subscribe("")
     for item in undertaker_table.items():
         IP,mylist = item
