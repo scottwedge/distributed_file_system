@@ -8,6 +8,7 @@ import socket as sok
 port = 10000
 MasterIP = sys.argv[1]
 N = int(sys.argv[2])
+MyIp = sys.argv[3]
 MasterPort = 4000
 
 
@@ -55,10 +56,12 @@ def Upload(socket, Msocket):
 ############################################
 
 ##################################################
+# def get_ip_address():
+#     s = sok.socket(sok.AF_INET, sok.SOCK_DGRAM)
+#     s.connect(("8.8.8.8", 80))
+#     return s.getsockname()[0]
 def get_ip_address():
-    s = sok.socket(sok.AF_INET, sok.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
+    return MyIp
 ###################################################
 
 ################        MAIN        ##################
