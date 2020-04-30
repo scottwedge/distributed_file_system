@@ -26,12 +26,12 @@ socket.connect("tcp://" + str(MasterIP) + ":" + str(port))
 socket.send_pyobj({'IP' : str(get_ip_address()), 'N' : str(N)})
 
 #running the alarm process
-os.system("python3.8 alarm.py "+ MyIp +" &")
+os.system("python3 alarm.py "+ MyIp +" &")
 
 #running the replica process
-os.system("python3.8 replica.py " + str(MasterIP) + MyIp +" &")
+os.system("python3 replica.py " + str(MasterIP) + MyIp +" &")
 
 #running the N datakeeper for this machine
 print("running the keeper "+ str(N))
 for i in range(N):
-    os.system("python3.8 keeper.py " + str(MasterIP) + " " + str(MasterN) + " &")
+    os.system("python3 keeper.py " + str(MasterIP) + " " + str(MasterN) + " &")
