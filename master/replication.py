@@ -8,7 +8,7 @@ def replication_func(availability_table,file_names_tables):
     data_keepers_num = -1
     if (len(sys.argv) > 1):
         data_keepers_num = int(sys.argv[1])
-    print("identifying "+str(data_ke    epers_num)+" data keepers in the replication system")
+    print("identifying "+str(data_keepers_num)+" data keepers in the replication system")
     maxNumOfReplications=min(3,data_keepers_num) #less than 3 if we have less than 3 data keepers
     context = zmq.Context()
     replication_socket = context.socket(zmq.PAIR)

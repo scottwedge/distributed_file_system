@@ -17,7 +17,7 @@ port = 5000
 N = int(sys.argv[1])
 MasterIP = str(sys.argv[2])
 MasterN = sys.argv[3]
-MyIp = sys.argv[4]
+MyIp = str(sys.argv[4])
 #sending the initializing data to the master
 print("sending my ip to master:" + str(get_ip_address()))
 context = zmq.Context()
@@ -29,9 +29,9 @@ socket.send_pyobj({'IP' : str(get_ip_address()), 'N' : str(N)})
 os.system("python3 alarm.py "+ MyIp +" &")
 
 #running the replica process
-os.system("python3 replica.py " + str(MasterIP) + MyIp +" &")
+os.system("python3 replica.py " + str(MasterIP) +" "+ MyIp +" &")
 
 #running the N datakeeper for this machine
 print("running the keeper "+ str(N))
 for i in range(N):
-    os.system("python3 keeper.py " + str(MasterIP) + " " + str(MasterN) + " &")
+    os.system("python3 keeper.py " + str(MasterIP) + " " + str(MasterN) + " " + str(MyIp) + " &")
