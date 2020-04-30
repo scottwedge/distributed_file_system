@@ -7,11 +7,13 @@ import socket as sok
 
 port = 7000
 masterIP = sys.argv[1]
-
+MyIp = sys.argv[2]
+# def get_ip_address():
+#     s = sok.socket(sok.AF_INET, sok.SOCK_DGRAM)
+#     s.connect(("8.8.8.8", 80))
+#     return s.getsockname()[0]
 def get_ip_address():
-    s = sok.socket(sok.AF_INET, sok.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
+    return MyIp
 
 def replicate(IP, video):
     keeperContext = zmq.Context()

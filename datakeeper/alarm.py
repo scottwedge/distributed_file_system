@@ -5,10 +5,13 @@ import os
 import signal
 import socket as sok
 
+# def get_ip_address():
+#     s = sok.socket(sok.AF_INET, sok.SOCK_DGRAM)
+#     s.connect(("8.8.8.8", 80))
+#     return s.getsockname()[0]
+MyIp = sys.argv[1]
 def get_ip_address():
-    s = sok.socket(sok.AF_INET, sok.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    return s.getsockname()[0]
+    return MyIp
 
 port = 6000
 ipv4 = get_ip_address()
