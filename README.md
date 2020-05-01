@@ -21,3 +21,9 @@ To run this project on a single machie you need to create number of IPs to repre
   
   # To run client files
    python3.8 client.py #NumberofProcessesinTheMaster MasterIP
+   
+# Prerequisites
+1- install python3.8                                                                                                        
+2- install zmq                                                                                                              
+3- install multiprocessing                                                                                                   
+4- install sockect                                                                                                          
