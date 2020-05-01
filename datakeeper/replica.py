@@ -5,6 +5,15 @@ import os
 import signal
 import socket as sok
 
+port = 7000
+masterIP = sys.argv[1]
+MyIp = str(sys.argv[2])
+# def get_ip_address():
+#     s = sok.socket(sok.AF_INET, sok.SOCK_DGRAM)
+#     s.connect(("8.8.8.8", 80))
+#     return s.getsockname()[0]
+# def get_ip_address():
+#     return MyIp
 
 def replicate(IP, video):
     keeperContext = zmq.Context()
@@ -23,18 +32,16 @@ def replicate(IP, video):
     print(msg)
     #keeperContext.term()
 
-def replicaKeeper_func(masterIP,MyIp):
-    port = 7000
-    masterContext = zmq.Context()
-    masterSocket = masterContext.socket(zmq.PAIR)
-    print("tcp://" + str(MyIp) + ":" + str(port))
-    masterSocket.bind("tcp://" + str(MyIp) + ":" + str(port))
+masterContext = zmq.Context()
+masterSocket = masterContext.socket(zmq.PAIR)
+print("tcp://" + str(MyIp) + ":" + str(port))
+masterSocket.bind("tcp://" + str(MyIp) + ":" + str(port))
 
-    while True:
-        # IP = masterSocket.recv_pyobj()
-        # masterSocket.send_pyobj("the ips was recieved")
-        # video = masterSocket.recv_pyobj()
-        # masterSocket.send_pyobj("the videos was recieved")
-        
-        IP,video = masterSocket.recv_pyobj()
-        replicate(IP, video)
+while True:
+    # IP = masterSocket.recv_pyobj()
+    # masterSocket.send_pyobj("the ips was recieved")
+    # video = masterSocket.recv_pyobj()
+    # masterSocket.send_pyobj("the videos was recieved")
+    
+    IP,video = masterSocket.recv_pyobj()
+    replicate(IP, video)

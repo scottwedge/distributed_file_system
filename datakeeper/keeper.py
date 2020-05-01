@@ -4,8 +4,15 @@ import sys
 import os
 import socket as sok
 
+#READIGN ARGUMENTS
+port = 10000
+MasterIP = sys.argv[1]
+N = int(sys.argv[2])
+MyIp = str(sys.argv[3])
+MasterPort = 4000
 
-def endRequest(request, filename, socket,MyIp):
+
+def endRequest(request, filename, socket):
     #list order ["dataKeeperSuccess" ,[ip, request(upload, download), filename]]
     print(["dataKeeperSuccess" ,[str(MyIp) + ":" + str(port), request, filename]])
     socket.send_pyobj(["dataKeeperSuccess" ,[str(MyIp) + ":" + str(port), str(request), str(filename)]])
@@ -14,7 +21,7 @@ def endRequest(request, filename, socket,MyIp):
     print(msg)
 
 ###################################################################################
-def download(socket, Msocket,MyIp):
+def download(socket, Msocket):
     print("entered the client upload function")
     socket.send_pyobj("send the video name\n")
     FILE_OUTPUT = socket.recv_pyobj()
@@ -33,11 +40,11 @@ def download(socket, Msocket,MyIp):
         out_file.write(msg)
     print("the video was saved")
     socket.send_pyobj("the file is saved successfully") 
-    endRequest("upload", FILE_OUTPUT, Msocket,MyIp)
+    endRequest("upload", FILE_OUTPUT, Msocket)
 ###################################################################################
 
 ############################################
-def Upload(socket, Msocket,MyIp):
+def Upload(socket, Msocket):
     print("entered the client download function")
     socket.send_pyobj("send the video name\n")
     msg = socket.recv_pyobj()
@@ -45,7 +52,7 @@ def Upload(socket, Msocket,MyIp):
     file = open(msg, 'rb').read()
     socket.send_pyobj(file)
     print("sent the file to client")
-    endRequest("download", msg, Msocket,MyIp)
+    endRequest("download", msg, Msocket)
 ############################################
 
 ##################################################
@@ -58,32 +65,27 @@ def Upload(socket, Msocket,MyIp):
 ###################################################
 
 ################        MAIN        ##################
-#READIGN ARGUMENTS
+context = zmq.Context()
+socket = context.socket(zmq.REP)
+print("binding to my ip tcp://" + str(MyIp) + ":" + str(port))
+socket.bind("tcp://" + str(MyIp) + ":" + str(port))
 
-def mainKeeper_func(MasterIP,MyIp,N):
-    port = 10000
-    MasterPort = 4000
-    context = zmq.Context()
-    socket = context.socket(zmq.REP)
-    print("binding to my ip tcp://" + str(MyIp) + ":" + str(port))
-    socket.bind("tcp://" + str(MyIp) + ":" + str(port))
+masterContext = zmq.Context()
+masterSocket = masterContext.socket(zmq.REQ)
+print("connecting to all master processes")
+for i in range(MasterPort, MasterPort + N):
+    print("tcp://" + MasterIP + ":" + str(i), " THIS IP FOR SUCCESS")
+    masterSocket.connect("tcp://" + MasterIP + ":" + str(i))
 
-    masterContext = zmq.Context()
-    masterSocket = masterContext.socket(zmq.REQ)
-    print("connecting to all master processes")
-    for i in range(MasterPort, MasterPort + N):
-        print("tcp://" + MasterIP + ":" + str(i), " THIS IP FOR SUCCESS")
-        masterSocket.connect("tcp://" + MasterIP + ":" + str(i))
+while True:
+    message = socket.recv_pyobj()
+    print(message)
+    #Upload(socket1)
+    if (message == "upload"):
+        download(socket, masterSocket)
 
-    while True:
-        message = socket.recv_pyobj()
-        print(message)
-        #Upload(socket1)
-        if (message == "upload"):
-            download(socket, masterSocket,MyIp)
-
-        elif (message == "download"):
-            Upload(socket, masterSocket,MyIp)
+    elif (message == "download"):
+        Upload(socket, masterSocket)
 
 
 
