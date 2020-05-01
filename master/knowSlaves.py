@@ -11,13 +11,11 @@ from undertaker import *
 from masterProcess import *
 from replication import *
 
-MyIp = sys.argv[3]
-# def get_ip_address():
-#     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#     s.connect(("8.8.8.8", 80))
-#     return s.getsockname()[0]
+
 def get_ip_address():
-    return MyIp
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
 
 data_keepers_num = -1
 port_num = "5000" #backdoor for recieving system ips
