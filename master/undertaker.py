@@ -4,7 +4,7 @@ import time
 process responsible for dealing with alive messages and deleting dead devices
 '''
 
-def undertaker_func(undertaker_table,file_names_tables):
+def undertaker_func(undertaker_table,file_names_tables,data_keepers_shared_num):
     # IP_table = shared_memory.SharedMemory(name="IP_table") #connect to shared memory
     print("undertaker process started")
     context = zmq.Context()
@@ -32,6 +32,7 @@ def undertaker_func(undertaker_table,file_names_tables):
                     print("deleting device "+str(IP)+" from the system")
                     del file_names_tables[IP]
                     del undertaker_table [IP]
+                    data_keepers_shared_num[0] = data_keepers_shared_num[0] -1 #decrement datakeepers num
                     
             for IP,mylist in undertaker_table:
                 undertaker_table[IP][0] = False

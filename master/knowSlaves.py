@@ -3,7 +3,6 @@ get ips of all data keepers and init and run undertaker and n processes
 '''
 import socket
 import sys
-# import os
 import zmq
 # from multiprocessing import shared_memory
 import multiprocessing
@@ -21,15 +20,18 @@ data_keepers_num = -1
 port_num = "5000" #backdoor for recieving system ips
 port_num_DataKeepers = 10000 #starting port for datakeepers process
 if (len(sys.argv) > 1):
-    data_keepers_num = int(sys.argv[1])
+    data_keepers_numInitial = int(sys.argv[1])
 print("identifying "+str(data_keepers_num)+" data keepers in the system")
 if (len(sys.argv) > 2):
     master_processes_num = int(sys.argv[2])
 else:
-    master_processes_num=data_keepers_num #use same N as data keepers
+    master_processes_num=data_keepers_numInitial #use same N as data keepers
 print("master will have "+str(master_processes_num)+" processes ")
 
 manager = multiprocessing.Manager()
+data_keepers_shared_num = manager.list()
+data_keepers_shared_num.append(data_keepers_numInitial)
+
 undertaker_table = manager.dict()
 file_names_tables = manager.dict()
 avaiability_table = manager.dict()
@@ -42,7 +44,7 @@ reciever.bind("tcp://%s:%s"  %( get_ip_address(), port_num))
 write ips in shared memory after recieving them from devices in the system
 '''
 print("recieving data keepers IPs ..")
-for i in range(0,data_keepers_num):
+for i in range(0,data_keepers_numInitial):
     print ("Entering The fucken For Loop")
     All = reciever.recv_pyobj()
     print ("after All Line ")
@@ -66,11 +68,11 @@ start N processes +undertaker
 # for i in range(0,data_keepers_num):
 #     os.system("python masterProcess.py ",i)
 
-undertaker_process = multiprocessing.Process(target=undertaker_func,args=(undertaker_table,file_names_tables))
+undertaker_process = multiprocessing.Process(target=undertaker_func,args=(undertaker_table,file_names_tables,data_keepers_shared_num))
 print("starting undertaker process..")
 undertaker_process.start()
 ############################################
-replication_process = multiprocessing.Process(target=replication_func,args=(avaiability_table,file_names_tables))
+replication_process = multiprocessing.Process(target=replication_func,args=(avaiability_table,file_names_tables,data_keepers_shared_num))
 print("starting replication process..")
 replication_process.start()
 #############################################
