@@ -10,11 +10,11 @@ import socket as sok
 #     s.connect(("8.8.8.8", 80))
 #     return s.getsockname()[0]
 MyIp = sys.argv[1]
-def get_ip_address():
-    return MyIp
+# def get_ip_address():
+#     return MyIp
 
 port = 6000
-ipv4 = get_ip_address()
+ipv4 = str(MyIp)
 context = zmq.Context()
 socket = context.socket(zmq.PUB)
 ip = "tcp://" + str(ipv4) + ":" + str(port)

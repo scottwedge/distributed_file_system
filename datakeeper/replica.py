@@ -7,13 +7,13 @@ import socket as sok
 
 port = 7000
 masterIP = sys.argv[1]
-MyIp = sys.argv[2]
+MyIp = str(sys.argv[2])
 # def get_ip_address():
 #     s = sok.socket(sok.AF_INET, sok.SOCK_DGRAM)
 #     s.connect(("8.8.8.8", 80))
 #     return s.getsockname()[0]
-def get_ip_address():
-    return MyIp
+# def get_ip_address():
+#     return MyIp
 
 def replicate(IP, video):
     keeperContext = zmq.Context()
@@ -34,8 +34,8 @@ def replicate(IP, video):
 
 masterContext = zmq.Context()
 masterSocket = masterContext.socket(zmq.PAIR)
-print("tcp://" + str(get_ip_address()) + ":" + str(port))
-masterSocket.bind("tcp://" + str(get_ip_address()) + ":" + str(port))
+print("tcp://" + str(MyIp) + ":" + str(port))
+masterSocket.bind("tcp://" + str(MyIp) + ":" + str(port))
 
 while True:
     # IP = masterSocket.recv_pyobj()

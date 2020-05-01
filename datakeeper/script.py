@@ -8,8 +8,8 @@ import socket as sok
 #     s = sok.socket(sok.AF_INET, sok.SOCK_DGRAM)
 #     s.connect(("8.8.8.8", 80))
 #     return s.getsockname()[0]
-def get_ip_address():
-    return MyIp
+# def get_ip_address():
+#     return MyIp
 
 #reading arguments
 print("reading arguments")
@@ -19,19 +19,21 @@ MasterIP = str(sys.argv[2])
 MasterN = sys.argv[3]
 MyIp = str(sys.argv[4])
 #sending the initializing data to the master
-print("sending my ip to master:" + str(get_ip_address()))
+print("sending my ip to master:" + str(MyIp))
 context = zmq.Context()
 socket = context.socket(zmq.PUSH)
 socket.connect("tcp://" + str(MasterIP) + ":" + str(port))
-socket.send_pyobj({'IP' : str(get_ip_address()), 'N' : str(N)})
+socket.send_pyobj({'IP' : str(MyIp), 'N' : str(N)})
 
-#running the alarm process
-os.system("python3 alarm.py "+ MyIp +" &")
 
 #running the replica process
-os.system("python3 replica.py " + str(MasterIP) +" "+ MyIp +" &")
+os.system("python3.8 replica.py " + str(MasterIP) +" "+ MyIp)
 
 #running the N datakeeper for this machine
 print("running the keeper "+ str(N))
 for i in range(N):
-    os.system("python3 keeper.py " + str(MasterIP) + " " + str(MasterN) + " " + str(MyIp) + " &")
+    os.system("python3.8 keeper.py " + str(MasterIP) + " " + str(MasterN) + " " + str(MyIp))
+
+
+#running the alarm process
+os.system("python3.8 alarm.py "+ MyIp)

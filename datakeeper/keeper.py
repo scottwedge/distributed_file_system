@@ -8,14 +8,14 @@ import socket as sok
 port = 10000
 MasterIP = sys.argv[1]
 N = int(sys.argv[2])
-MyIp = sys.argv[3]
+MyIp = str(sys.argv[3])
 MasterPort = 4000
 
 
 def endRequest(request, filename, socket):
     #list order ["dataKeeperSuccess" ,[ip, request(upload, download), filename]]
-    print(["dataKeeperSuccess" ,[str(get_ip_address()) + ":" + str(port), request, filename]])
-    socket.send_pyobj(["dataKeeperSuccess" ,[str(get_ip_address()) + ":" + str(port), str(request), str(filename)]])
+    print(["dataKeeperSuccess" ,[str(MyIp) + ":" + str(port), request, filename]])
+    socket.send_pyobj(["dataKeeperSuccess" ,[str(MyIp) + ":" + str(port), str(request), str(filename)]])
     print ("Ahmed Here")
     msg = socket.recv_pyobj()
     print(msg)
@@ -60,15 +60,15 @@ def Upload(socket, Msocket):
 #     s = sok.socket(sok.AF_INET, sok.SOCK_DGRAM)
 #     s.connect(("8.8.8.8", 80))
 #     return s.getsockname()[0]
-def get_ip_address():
-    return MyIp
+# def get_ip_address():
+#     return MyIp
 ###################################################
 
 ################        MAIN        ##################
 context = zmq.Context()
 socket = context.socket(zmq.REP)
-print("binding to my ip tcp://" + str(get_ip_address()) + ":" + str(port))
-socket.bind("tcp://" + str(get_ip_address()) + ":" + str(port))
+print("binding to my ip tcp://" + str(MyIp) + ":" + str(port))
+socket.bind("tcp://" + str(MyIp) + ":" + str(port))
 
 masterContext = zmq.Context()
 masterSocket = masterContext.socket(zmq.REQ)
