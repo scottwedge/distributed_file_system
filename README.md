@@ -25,5 +25,4 @@ To run this project on a single machie you need to create number of IPs to repre
 # Prerequisites
 1- install python3.8                                                                                                        
 2- install zmq                                                                                                              
-3- install multiprocessing                                                                                                   
-4- install sockect                                                                                                          
+3- install multiprocessing                                                                                                                                                                                                          
