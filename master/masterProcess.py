@@ -1,4 +1,4 @@
-import zmq
+emport zmq
 import multiprocessing
 import socket
 
@@ -9,7 +9,7 @@ def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availabilit
     print("master process no. "+str(process_ID)+" started")
     # process_ID = int(sys.argv[1])
     # IP_table = shared_memory.SharedMemory(name="IP_table") #connect to shared memory
-    port = str(4000+process_ID) #port for reciebing requests
+    port = str(4000+process_ID) #port for receiving requests
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     socket.bind("tcp://%s:%s"  %( get_ip_address(), port)) #bind server
@@ -22,7 +22,7 @@ def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availabilit
         print("#####################################################################################")
         print("waiting for new request")
         request_type,file_name = socket.recv_pyobj()
-        print(str(process_ID)+" process recieved a request of type :"+request_type)
+        print(str(process_ID)+" process received a request of type :"+request_type)
         print(file_name)
 
         print(file_names_tables,file_name)
@@ -39,7 +39,7 @@ def MasterProcess_func(process_ID,undertaker_table,file_names_tables,availabilit
                 message = upload_handler(availability_table)
                 print("master response :"+message +" is free to upload to")
                 socket.send_pyobj(message)
-                # wait for recieve from data keeper
+                # wait for receive from data keeper
                 # send success to client
                 # free data keeper -> set IPport in availability_table to True
 
@@ -109,7 +109,7 @@ def upload_handler(availability_table):
     return "error : no devices available to upload to"
 
 def download_handler(availability_table,IP_return_list):
-    #recieved download request from client
+    #received download request from client
     retArr=[]
     for item in availability_table.items():
         IPport,status = item

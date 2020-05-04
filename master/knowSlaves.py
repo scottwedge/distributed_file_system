@@ -17,7 +17,7 @@ def get_ip_address():
     return s.getsockname()[0]
 
 data_keepers_num = -1
-port_num = "5000" #backdoor for recieving system ips
+port_num = "5000" #backdoor for receiving system ips
 port_num_DataKeepers = 10000 #starting port for datakeepers process
 if (len(sys.argv) > 1):
     data_keepers_numInitial = int(sys.argv[1])
@@ -41,14 +41,14 @@ reciever = context.socket(zmq.PULL)
 reciever.bind("tcp://%s:%s"  %( get_ip_address(), port_num))
 
 '''
-write ips in shared memory after recieving them from devices in the system
+write ips in shared memory after receiving them from devices in the system
 '''
-print("recieving data keepers IPs ..")
+print("receiving data keepers IPs ..")
 for i in range(0,data_keepers_numInitial):
     print ("Entering The fucken For Loop")
     All = reciever.recv_pyobj()
     print ("after All Line ")
-    print("device "+str(i+1)+" recieved :"+All['IP'])
+    print("device "+str(i+1)+" received :"+All['IP'])
     #print(All['IP'])
     #print(All['N'])
     ip = All['IP']

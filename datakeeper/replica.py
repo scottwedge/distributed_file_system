@@ -39,9 +39,9 @@ masterSocket.bind("tcp://" + str(MyIp) + ":" + str(port))
 
 while True:
     # IP = masterSocket.recv_pyobj()
-    # masterSocket.send_pyobj("the ips was recieved")
+    # masterSocket.send_pyobj("the ips was received")
     # video = masterSocket.recv_pyobj()
-    # masterSocket.send_pyobj("the videos was recieved")
+    # masterSocket.send_pyobj("the videos was received")
     
     IP,video = masterSocket.recv_pyobj()
     replicate(IP, video)

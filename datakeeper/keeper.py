@@ -25,7 +25,7 @@ def download(socket, Msocket):
     print("entered the client upload function")
     socket.send_pyobj("send the video name\n")
     FILE_OUTPUT = socket.recv_pyobj()
-    print("recieved the video")
+    print("received the video")
     #print(msg)
     socket.send_pyobj("send the video")
     msg = socket.recv_pyobj()

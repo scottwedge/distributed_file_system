@@ -8,7 +8,7 @@ def undertaker_func(undertaker_table,file_names_tables,data_keepers_shared_num):
     # IP_table = shared_memory.SharedMemory(name="IP_table") #connect to shared memory
     print("undertaker process started")
     context = zmq.Context()
-    port="6000" #back door for recieving alive messages from data keepers
+    port="6000" #back door for receiving alive messages from data keepers
     socket = context.socket(zmq.SUB)
     socket.subscribe("")
     for item in undertaker_table.items():
@@ -18,9 +18,9 @@ def undertaker_func(undertaker_table,file_names_tables,data_keepers_shared_num):
     #print ("************************************************************************this is the start time ::",start_time)
     print("timer initialized at "+str(start_time))
     while True:
-        recieved_IP = socket.recv_string() 
-        undertaker_table[recieved_IP][0] =True #set alive
-        #print(str(recieved_IP)+" sends alive message")
+        received_IP = socket.recv_string() 
+        undertaker_table[received_IP][0] =True #set alive
+        #print(str(received_IP)+" sends alive message")
         end_time = time.time()
         #print ("**********************************************************************this is the end time ::",end_time)
         #if a second has passed 
